@@ -1,0 +1,6 @@
+{
+  "name": "Danh Nguyễn Chí Toàn — Front-end Developer Portfolio",
+  "description": "Trang portfolio giới thiệu Danh Nguyễn Chí Toàn — Front-end Developer (FPT Polytechnic) với không gian 3D tương tác Three.js, kiến trúc tách biệt Angular Frontend và Express.js REST API Backend.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

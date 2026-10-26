@@ -1,0 +1,677 @@
+<!-- Strict 3-Zone Top Bar Contract (1 Row, Solid Surface, Zero Gradients, Zero Header Badges) -->
+<header
+  class="fixed top-0 left-0 right-0 z-40 border-b border-[#272A30] bg-[#141517] text-[#F6F5F1]"
+>
+  <div class="mx-auto flex max-w-[1360px] items-center justify-between gap-8 px-6 py-3.5">
+    <!-- Zone 1: Single-line Brand Wordmark -->
+    <a
+      href="#studio-3d"
+      (click)="$event.preventDefault(); scrollToSection('studio-3d')"
+      class="font-display text-base font-bold tracking-tight text-white whitespace-nowrap shrink-0 hover:text-[#D9381E] transition-colors duration-150"
+    >
+      Danh Nguyễn Chí Toàn
+    </a>
+
+    <!-- Zone 2: 5 Concise Single-Line Navigation Links -->
+    <nav
+      aria-label="Điều hướng chính"
+      class="hidden md:flex items-center gap-7 text-sm font-medium text-[#D4D4D8]"
+    >
+      <a
+        href="#studio-3d"
+        (click)="$event.preventDefault(); scrollToSection('studio-3d')"
+        class="hover:text-white hover:underline underline-offset-4 transition-colors duration-150 whitespace-nowrap shrink-0"
+      >
+        Không gian 3D
+      </a>
+      <a
+        href="#gioi-thieu"
+        (click)="$event.preventDefault(); scrollToSection('gioi-thieu')"
+        class="hover:text-white hover:underline underline-offset-4 transition-colors duration-150 whitespace-nowrap shrink-0"
+      >
+        Giới thiệu
+      </a>
+      <a
+        href="#ky-nang"
+        (click)="$event.preventDefault(); scrollToSection('ky-nang')"
+        class="hover:text-white hover:underline underline-offset-4 transition-colors duration-150 whitespace-nowrap shrink-0"
+      >
+        Kỹ năng
+      </a>
+      <a
+        href="#du-an"
+        (click)="$event.preventDefault(); scrollToSection('du-an')"
+        class="hover:text-white hover:underline underline-offset-4 transition-colors duration-150 whitespace-nowrap shrink-0"
+      >
+        Dự án
+      </a>
+      <a
+        href="#kien-truc"
+        (click)="$event.preventDefault(); scrollToSection('kien-truc')"
+        class="hover:text-white hover:underline underline-offset-4 transition-colors duration-150 whitespace-nowrap shrink-0"
+      >
+        Kiến trúc API
+      </a>
+    </nav>
+
+    <!-- Zone 3: 1 Primary CTA Button -->
+    <div class="flex items-center shrink-0">
+      <button
+        type="button"
+        (click)="scrollToSection('lien-he')"
+        class="inline-flex items-center gap-1.5 rounded-lg bg-[#D9381E] px-4 py-2 text-xs font-semibold text-white transition-colors duration-150 hover:bg-[#B82D16] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white whitespace-nowrap shrink-0 cursor-pointer"
+      >
+        <mat-icon class="!text-base !w-4 !h-4">mail_outline</mat-icon>
+        <span>Liên hệ hợp tác</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ===================================================================== -->
+  <!-- HERO STAGE: Full-Bleed 100vw x 100vh Interactive Three.js Workstation -->
+  <!-- ===================================================================== -->
+  <app-three-studio
+    (scrollToProfile)="scrollToSection('gioi-thieu')"
+    (scrollToProjects)="scrollToSection('du-an')"
+  />
+
+  <!-- ===================================================================== -->
+  <!-- FULL-WIDTH ACADEMIC & TECHNICAL FOUNDATION STRIP                      -->
+  <!-- ===================================================================== -->
+  <section
+    aria-label="Điểm nhấn nền tảng chuyên môn"
+    class="border-b border-[#DCD9D0] bg-[#ECEAE4]"
+  >
+    <div class="mx-auto max-w-[1360px] px-6 py-10">
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        @for (metric of profile().metrics; track metric.label) {
+          <div class="space-y-1.5">
+            <p class="font-display text-2xl font-bold tracking-tight text-[#141517] tabular-nums">
+              {{ metric.value }}
+            </p>
+            <p class="text-sm font-semibold text-[#141517]">
+              {{ metric.label }}
+            </p>
+            <p class="text-xs leading-relaxed text-[#52525B]">
+              {{ metric.detail }}
+            </p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECTION 01: GIỚI THIỆU & ĐỊNH HƯỚNG PHÁT TRIỂN                        -->
+  <!-- ===================================================================== -->
+  <section
+    id="gioi-thieu"
+    class="scroll-mt-16 border-b border-[#DCD9D0] bg-[#F6F5F1] py-20 sm:py-24"
+  >
+    <div class="mx-auto max-w-[1360px] px-6">
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 items-stretch">
+        <!-- Editorial Workspace Photo Column -->
+        <div class="lg:col-span-5 flex flex-col justify-between">
+          <div class="h-full overflow-hidden rounded-2xl border border-[#DCD9D0] bg-[#ECEAE4]">
+            @if (!workspaceImgFailed()) {
+              <img
+                [src]="profile().workspaceImage"
+                alt="Không gian làm việc tối giản của Danh Nguyễn Chí Toàn"
+                referrerpolicy="no-referrer"
+                (error)="onWorkspaceImageError()"
+                class="h-80 w-full object-cover lg:h-full"
+              />
+            } @else {
+              <div class="flex h-80 lg:h-full w-full flex-col items-center justify-center p-8 text-center">
+                <span class="font-mono text-xs text-[#52525B]">FPT Polytechnic · Front-end Development</span>
+                <p class="mt-2 font-display text-xl font-bold text-[#141517]">
+                  {{ profile().fullName }}
+                </p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Biographical & Engineering Mindset Column -->
+        <div class="lg:col-span-7 flex flex-col justify-between space-y-8">
+          <div class="space-y-4">
+            <div class="flex items-center gap-2 text-xs font-mono text-[#52525B]">
+              <span>01. Giới thiệu Bản thân</span>
+              <span aria-hidden="true">·</span>
+              <span>{{ profile().education.institution }}</span>
+              <span aria-hidden="true">·</span>
+              <span>{{ profile().location }}</span>
+            </div>
+
+            <h2
+              class="font-display text-3xl font-bold tracking-tight text-[#141517] sm:text-4xl text-balance"
+            >
+              {{ profile().headline }}
+            </h2>
+
+            <p class="text-base leading-relaxed text-[#27272A] max-w-2xl">
+              {{ profile().summary }}
+            </p>
+          </div>
+
+          <div class="space-y-4 border-t border-[#DCD9D0] pt-6">
+            @for (paragraph of profile().philosophy; track paragraph; let idx = $index) {
+              <div class="flex items-start gap-4">
+                <span class="font-mono text-xs font-semibold text-[#D9381E] tabular-nums mt-1">
+                  0{{ idx + 1 }}
+                </span>
+                <p class="text-sm sm:text-base leading-relaxed text-[#3F3F46] max-w-2xl">
+                  {{ paragraph }}
+                </p>
+              </div>
+            }
+          </div>
+
+          <!-- Academic & Career Orientation Summary Row -->
+          <div class="grid grid-cols-1 gap-6 border-t border-[#DCD9D0] pt-6 sm:grid-cols-2">
+            <div>
+              <p class="text-xs font-mono text-[#52525B]">Đào tạo Chuyên môn</p>
+              <p class="mt-1 font-display text-base font-bold text-[#141517]">
+                {{ profile().education.institution }} — {{ profile().education.program }}
+              </p>
+              <p class="mt-1 text-xs text-[#52525B]">
+                {{ profile().education.focus }}
+              </p>
+            </div>
+            <div>
+              <p class="text-xs font-mono text-[#52525B]">Mục tiêu Nghề nghiệp</p>
+              <p class="mt-1 font-display text-base font-bold text-[#141517]">
+                Phát triển chuyên sâu trong môi trường thực tế
+              </p>
+              <p class="mt-1 text-xs text-[#52525B]">
+                Chủ động học hỏi công nghệ mới · Rèn luyện tư duy giải quyết vấn đề
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECTION 02: NĂNG LỰC KỸ THUẬT & HỆ SINH THÁI CÔNG NGHỆ                -->
+  <!-- ===================================================================== -->
+  <section
+    id="ky-nang"
+    class="scroll-mt-16 border-b border-[#DCD9D0] bg-[#ECEAE4] py-20 sm:py-24"
+  >
+    <div class="mx-auto max-w-[1360px] px-6">
+      <!-- Header + Interactive Segmented Filter Controls -->
+      <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+        <div class="max-w-2xl space-y-2">
+          <p class="font-mono text-xs text-[#52525B]">02. Năng lực Kỹ thuật</p>
+          <h2 class="font-display text-3xl font-bold tracking-tight text-[#141517] sm:text-4xl text-balance">
+            Hệ sinh thái Front-end, Quản lý Trạng thái & Dịch vụ Web
+          </h2>
+          <p class="text-sm sm:text-base leading-relaxed text-[#3F3F46]">
+            Tập trung nắm vững bản chất ngôn ngữ, tổ chức Component có tính kế thừa cao và kết nối liền mạch với REST API phía máy chủ.
+          </p>
+        </div>
+
+        <!-- Functional Segmented Filter Buttons (Queries Express GET /api/skills) -->
+        <div
+          role="group"
+          aria-label="Bộ lọc nhóm kỹ năng"
+          class="flex flex-wrap items-center gap-1 rounded-xl border border-[#D4D1C7] bg-[#F6F5F1] p-1.5"
+        >
+          @for (tab of skillFilterTabs; track tab.id) {
+            <button
+              type="button"
+              (click)="filterSkills(tab.id)"
+              [class.bg-[#141517]]="activeSkillFilter() === tab.id"
+              [class.text-white]="activeSkillFilter() === tab.id"
+              [class.text-[#3F3F46]]="activeSkillFilter() !== tab.id"
+              class="rounded-lg px-3.5 py-2 text-xs font-semibold transition-colors duration-150 hover:text-[#141517] whitespace-nowrap shrink-0 cursor-pointer"
+              [class.hover:text-white]="activeSkillFilter() === tab.id"
+            >
+              {{ tab.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Capabilities Cards Grid (Single-Elevation Depth, Unboxed Metadata) -->
+      <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        @for (skill of skills(); track skill.id) {
+          <article
+            class="flex flex-col justify-between rounded-2xl border border-[#DCD9D0] bg-white p-6 sm:p-7 transition-transform duration-150 hover:-translate-y-0.5"
+          >
+            <div class="space-y-4">
+              <!-- Quiet Inline Metadata (Zero Pill Chips) -->
+              <div class="flex items-center gap-2 font-mono text-xs text-[#52525B] tabular-nums">
+                <span class="font-semibold text-[#D9381E]">{{ skill.index }}.</span>
+                <span>{{ skill.categoryLabel }}</span>
+              </div>
+
+              <h3 class="font-display text-xl font-bold leading-snug text-[#141517] text-balance">
+                {{ skill.title }}
+              </h3>
+
+              <!-- Unboxed Technology List with Typographic Separators -->
+              <p class="font-mono text-xs font-medium text-[#141517]">
+                {{ skill.technologies.join(' · ') }}
+              </p>
+
+              <p class="text-sm leading-relaxed text-[#52525B]">
+                {{ skill.practicalApplication }}
+              </p>
+            </div>
+
+            <div class="mt-6 border-t border-[#ECEAE4] pt-4 text-xs text-[#52525B]">
+              {{ skill.architecturalFocus }}
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECTION 03: DỰ ÁN TIÊU BIỂU (DYNAMIC BENTO GRID + MODAL CASE STUDY)    -->
+  <!-- ===================================================================== -->
+  <section
+    id="du-an"
+    class="scroll-mt-16 border-b border-[#DCD9D0] bg-[#F6F5F1] py-20 sm:py-24"
+  >
+    <div class="mx-auto max-w-[1360px] px-6">
+      <div class="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+        <div class="max-w-2xl space-y-2">
+          <p class="font-mono text-xs text-[#52525B]">03. Dự án Thực hành & Nghiên cứu</p>
+          <h2 class="font-display text-3xl font-bold tracking-tight text-[#141517] sm:text-4xl text-balance">
+            Ứng dụng Tư duy Component Tái sử dụng vào Bài toán Thực tế
+          </h2>
+          <p class="text-sm sm:text-base leading-relaxed text-[#3F3F46]">
+            Nhấp vào từng dự án để xem chi tiết cách tổ chức Component, quản lý luồng dữ liệu RxJS / NgRx và giao tiếp REST API.
+          </p>
+        </div>
+
+        <!-- Functional Project Category Filter -->
+        <div
+          role="group"
+          aria-label="Bộ lọc danh mục dự án"
+          class="flex flex-wrap items-center gap-1 rounded-xl border border-[#DCD9D0] bg-[#ECEAE4] p-1.5"
+        >
+          @for (tab of projectFilterTabs; track tab.id) {
+            <button
+              type="button"
+              (click)="filterProjects(tab.id)"
+              [class.bg-[#141517]]="activeProjectFilter() === tab.id"
+              [class.text-white]="activeProjectFilter() === tab.id"
+              [class.text-[#3F3F46]]="activeProjectFilter() !== tab.id"
+              class="rounded-lg px-3.5 py-2 text-xs font-semibold transition-colors duration-150 hover:text-[#141517] whitespace-nowrap shrink-0 cursor-pointer"
+              [class.hover:text-white]="activeProjectFilter() === tab.id"
+            >
+              {{ tab.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Dynamic Bento Showcase Grid -->
+      <div class="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-12">
+        @for (project of projects(); track project.id) {
+          <article
+            [class.lg:col-span-7]="project.featured && activeProjectFilter() === 'all'"
+            [class.lg:row-span-2]="project.featured && activeProjectFilter() === 'all'"
+            [class.lg:col-span-5]="!project.featured && activeProjectFilter() === 'all'"
+            [class.lg:col-span-6]="activeProjectFilter() !== 'all'"
+            class="group flex flex-col justify-between overflow-hidden rounded-2xl border border-[#DCD9D0] bg-white transition-transform duration-150 hover:-translate-y-0.5"
+          >
+            <div>
+              <!-- Media Container with Zero-Broken-Image Fallback -->
+              <div class="overflow-hidden border-b border-[#ECEAE4] bg-[#ECEAE4]">
+                @if (!isProjectImageFailed(project.id)) {
+                  <img
+                    [src]="project.image"
+                    [alt]="project.title"
+                    referrerpolicy="no-referrer"
+                    (error)="onProjectImageError(project.id)"
+                    [class.sm:h-80]="project.featured && activeProjectFilter() === 'all'"
+                    [class.sm:h-52]="!project.featured || activeProjectFilter() !== 'all'"
+                    class="h-56 w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+                  />
+                } @else {
+                  <div class="flex h-56 w-full flex-col items-center justify-center bg-[#ECEAE4] p-6 text-center">
+                    <span class="font-mono text-xs text-[#52525B] tabular-nums">{{ project.index }} · {{ project.categoryLabel }}</span>
+                    <p class="mt-2 font-display text-lg font-bold text-[#141517]">{{ project.title }}</p>
+                  </div>
+                }
+              </div>
+
+              <!-- Card Text Content -->
+              <div class="p-6 sm:p-7 space-y-3">
+                <div class="flex items-center gap-2 font-mono text-xs text-[#52525B] tabular-nums">
+                  <span class="font-semibold text-[#D9381E]">{{ project.index }}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{{ project.categoryLabel }}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{{ project.year }}</span>
+                </div>
+
+                <h3 class="font-display text-xl sm:text-2xl font-bold tracking-tight text-[#141517] text-balance">
+                  {{ project.title }}
+                </h3>
+
+                <p class="text-sm leading-relaxed text-[#52525B]">
+                  {{ project.summary }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-4 border-t border-[#ECEAE4] px-6 py-4 sm:px-7">
+              <span class="font-mono text-xs text-[#52525B]">
+                {{ project.stack.join(' · ') }}
+              </span>
+
+              <button
+                type="button"
+                (click)="openProjectModal(project)"
+                class="inline-flex items-center gap-1.5 rounded-lg bg-[#141517] px-3.5 py-2 text-xs font-semibold text-white transition-colors duration-150 hover:bg-[#D9381E] whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                <span>Phân tích Kiến trúc</span>
+                <mat-icon class="!text-base !w-4 !h-4">arrow_outward</mat-icon>
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECTION 04: KIẾN TRÚC FULL-STACK & TRÌNH KIỂM THỬ REST API            -->
+  <!-- ===================================================================== -->
+  <section
+    id="kien-truc"
+    class="scroll-mt-16 border-b border-[#DCD9D0] bg-[#ECEAE4] py-20 sm:py-24"
+  >
+    <div class="mx-auto max-w-[1360px] px-6">
+      <div class="max-w-2xl space-y-2 mb-12">
+        <p class="font-mono text-xs text-[#52525B]">04. Kiến trúc Ứng dụng Thực tế</p>
+        <h2 class="font-display text-3xl font-bold tracking-tight text-[#141517] sm:text-4xl text-balance">
+          Mã nguồn Tách biệt Frontend Angular & Backend Express.js
+        </h2>
+        <p class="text-sm sm:text-base leading-relaxed text-[#3F3F46]">
+          Minh họa trực tiếp kiến thức về Node.js, Express.js, mô hình hóa dữ liệu MongoDB và giao tiếp REST API ngay trên chính hệ thống vận hành trang Portfolio này.
+        </p>
+      </div>
+
+      <app-api-sandbox
+        [blueprint]="architecture()"
+        [contactsCount]="receivedContactsCount()"
+      />
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECTION 05: LIÊN HỆ & HỢP TÁC (REACTIVE FORMS -> POST /api/contact)   -->
+  <!-- ===================================================================== -->
+  <section
+    id="lien-he"
+    class="scroll-mt-16 bg-[#F6F5F1] py-20 sm:py-24"
+  >
+    <div class="mx-auto max-w-[1360px] px-6">
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12">
+        <!-- Left Column: Direct Contact Details -->
+        <div class="lg:col-span-5 space-y-8">
+          <div class="space-y-3">
+            <p class="font-mono text-xs text-[#52525B]">05. Kết nối & Trao đổi</p>
+            <h2 class="font-display text-3xl font-bold tracking-tight text-[#141517] sm:text-4xl text-balance">
+              Sẵn sàng Đồng hành trong Môi trường Làm việc Thực tế
+            </h2>
+            <p class="text-sm sm:text-base leading-relaxed text-[#3F3F46]">
+              Tôi luôn mong muốn có cơ hội tham gia các dự án phát triển sản phẩm thực tế để đóng góp kỹ năng Front-end, học hỏi quy trình chuẩn mực từ đội ngũ anh chị đi trước và nâng cao năng lực giải quyết vấn đề.
+            </p>
+          </div>
+
+          <div class="space-y-5 border-t border-[#DCD9D0] pt-6">
+            <div>
+              <p class="font-mono text-xs text-[#52525B]">Họ và Tên</p>
+              <p class="mt-1 font-display text-lg font-bold text-[#141517]">
+                {{ profile().fullName }}
+              </p>
+            </div>
+
+            <div>
+              <p class="font-mono text-xs text-[#52525B]">Thư điện tử Trực tiếp</p>
+              <div class="mt-1.5 flex flex-wrap items-center gap-3">
+                <a
+                  [href]="'mailto:' + profile().email"
+                  class="font-mono text-sm font-semibold text-[#141517] underline underline-offset-4 hover:text-[#D9381E]"
+                >
+                  {{ profile().email }}
+                </a>
+                <button
+                  type="button"
+                  (click)="copyEmailAddress()"
+                  class="inline-flex items-center gap-1.5 rounded-lg border border-[#DCD9D0] bg-white px-3 py-1.5 text-xs font-medium text-[#141517] transition-colors duration-150 hover:border-[#141517] whitespace-nowrap shrink-0 cursor-pointer"
+                >
+                  <mat-icon class="!text-sm !w-3.5 !h-3.5">
+                    {{ emailCopied() ? 'check' : 'content_copy' }}
+                  </mat-icon>
+                  <span>{{ emailCopied() ? 'Đã sao chép' : 'Sao chép Email' }}</span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <p class="font-mono text-xs text-[#52525B]">Đơn vị Đào tạo & Khu vực</p>
+              <p class="mt-1 text-sm font-medium text-[#141517]">
+                {{ profile().education.institution }} · {{ profile().education.program }} · {{ profile().location }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Reactive Form Connected to Express.js POST /api/contact -->
+        <div class="lg:col-span-7">
+          <form
+            [formGroup]="contactForm"
+            (ngSubmit)="submitContactForm()"
+            novalidate
+            class="rounded-2xl border border-[#DCD9D0] bg-white p-6 sm:p-8 space-y-5"
+          >
+            <div class="border-b border-[#ECEAE4] pb-4">
+              <h3 class="font-display text-xl font-bold text-[#141517]">
+                Gửi Lời nhắn Trực tiếp
+              </h3>
+              <p class="mt-1 text-xs text-[#52525B]">
+                Biểu mẫu sử dụng Angular Reactive Forms và xác thực trực tiếp qua endpoint <code class="font-mono text-[#141517]">POST /api/contact</code> trên Express.js.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <div>
+                <label
+                  for="contact-name"
+                  class="block text-xs font-semibold text-[#141517]"
+                >
+                  Họ và tên người liên hệ *
+                </label>
+                <input
+                  id="contact-name"
+                  type="text"
+                  formControlName="senderName"
+                  placeholder="Nguyễn Văn A"
+                  class="mt-1.5 w-full rounded-lg border border-[#D4D1C7] bg-[#F6F5F1] px-3.5 py-2.5 text-sm text-[#141517] placeholder:text-[#71717A] focus:border-[#141517] focus:bg-white focus:outline-none"
+                />
+                @if (contactForm.controls.senderName.touched && contactForm.controls.senderName.invalid) {
+                  <p class="mt-1 text-xs text-[#D9381E]">
+                    Vui lòng nhập họ tên (tối thiểu 2 ký tự).
+                  </p>
+                }
+              </div>
+
+              <div>
+                <label
+                  for="contact-email"
+                  class="block text-xs font-semibold text-[#141517]"
+                >
+                  Địa chỉ Email *
+                </label>
+                <input
+                  id="contact-email"
+                  type="email"
+                  formControlName="senderEmail"
+                  placeholder="tuyendung@congty.vn"
+                  class="mt-1.5 w-full rounded-lg border border-[#D4D1C7] bg-[#F6F5F1] px-3.5 py-2.5 text-sm text-[#141517] placeholder:text-[#71717A] focus:border-[#141517] focus:bg-white focus:outline-none"
+                />
+                @if (contactForm.controls.senderEmail.touched && contactForm.controls.senderEmail.invalid) {
+                  <p class="mt-1 text-xs text-[#D9381E]">
+                    Vui lòng nhập địa chỉ email hợp lệ.
+                  </p>
+                }
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <div>
+                <label
+                  for="contact-org"
+                  class="block text-xs font-semibold text-[#141517]"
+                >
+                  Công ty / Tổ chức
+                </label>
+                <input
+                  id="contact-org"
+                  type="text"
+                  formControlName="organization"
+                  placeholder="Tên doanh nghiệp (không bắt buộc)"
+                  class="mt-1.5 w-full rounded-lg border border-[#D4D1C7] bg-[#F6F5F1] px-3.5 py-2.5 text-sm text-[#141517] placeholder:text-[#71717A] focus:border-[#141517] focus:bg-white focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="contact-topic"
+                  class="block text-xs font-semibold text-[#141517]"
+                >
+                  Chủ đề trao đổi *
+                </label>
+                <select
+                  id="contact-topic"
+                  formControlName="topic"
+                  class="mt-1.5 w-full rounded-lg border border-[#D4D1C7] bg-[#F6F5F1] px-3.5 py-2.5 text-sm text-[#141517] focus:border-[#141517] focus:bg-white focus:outline-none"
+                >
+                  <option value="Cơ hội Thực tập / Fresher Front-end Developer">
+                    Cơ hội Thực tập / Fresher Front-end Developer
+                  </option>
+                  <option value="Trao đổi Dự án Angular / React">
+                    Trao đổi Dự án Angular / React
+                  </option>
+                  <option value="Kết nối Chuyên môn & Đóng góp Mã nguồn">
+                    Kết nối Chuyên môn & Đóng góp Mã nguồn
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="contact-message"
+                class="block text-xs font-semibold text-[#141517]"
+              >
+                Nội dung tin nhắn *
+              </label>
+              <textarea
+                id="contact-message"
+                rows="4"
+                formControlName="message"
+                placeholder="Chia sẻ yêu cầu công việc, thời gian phỏng vấn hoặc nội dung hợp tác..."
+                class="mt-1.5 w-full rounded-lg border border-[#D4D1C7] bg-[#F6F5F1] px-3.5 py-2.5 text-sm text-[#141517] placeholder:text-[#71717A] focus:border-[#141517] focus:bg-white focus:outline-none"
+              ></textarea>
+              @if (contactForm.controls.message.touched && contactForm.controls.message.invalid) {
+                <p class="mt-1 text-xs text-[#D9381E]">
+                  Nội dung trao đổi cần tối thiểu 10 ký tự.
+                </p>
+              }
+            </div>
+
+            @if (contactErrorMessage()) {
+              <div
+                role="alert"
+                class="rounded-xl border border-[#D9381E] bg-[#F6F5F1] p-4 text-xs font-medium text-[#D9381E]"
+              >
+                {{ contactErrorMessage() }}
+              </div>
+            }
+
+            @if (contactSuccessMessage()) {
+              <div
+                role="status"
+                class="rounded-xl border border-[#141517] bg-[#F6F5F1] p-4 text-xs text-[#141517] space-y-1"
+              >
+                <p class="font-semibold">{{ contactSuccessMessage() }}</p>
+                @if (contactSuccessRecord(); as rec) {
+                  <p class="font-mono text-[#52525B] tabular-nums">
+                    Mã ghi nhận: {{ rec.id }} · Người gửi: {{ rec.senderName }}
+                  </p>
+                }
+              </div>
+            }
+
+            <div class="pt-2 flex items-center justify-end">
+              <button
+                type="submit"
+                [disabled]="submittingContact()"
+                class="inline-flex items-center gap-2 rounded-lg bg-[#D9381E] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-[#B82D16] disabled:opacity-50 whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                <mat-icon class="!text-base !w-4 !h-4">send</mat-icon>
+                <span>{{ submittingContact() ? 'Đang gửi tới máy chủ...' : 'Gửi Lời nhắn' }}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Quiet Architectural Footer (Zero Fake Engine Tickers) -->
+<footer class="border-t border-[#272A30] bg-[#141517] py-10 text-[#A1A1AA]">
+  <div
+    class="mx-auto flex max-w-[1360px] flex-col items-start justify-between gap-4 px-6 sm:flex-row sm:items-center text-xs"
+  >
+    <p class="text-[#E4E4E7] font-medium">
+      © 2026 Danh Nguyễn Chí Toàn · Front-end Developer · FPT Polytechnic
+    </p>
+    <div class="flex flex-wrap items-center gap-6">
+      <a
+        href="#studio-3d"
+        (click)="$event.preventDefault(); scrollToSection('studio-3d')"
+        class="hover:text-white transition-colors whitespace-nowrap"
+      >
+        Lên đầu trang
+      </a>
+      <a
+        [href]="'mailto:' + profile().email"
+        class="hover:text-white transition-colors whitespace-nowrap"
+      >
+        {{ profile().email }}
+      </a>
+      <a
+        [href]="profile().github"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-white transition-colors whitespace-nowrap"
+      >
+        GitHub
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- Accessible Case Study Lightbox Modal -->
+@if (selectedProject(); as activeProject) {
+  <app-project-modal
+    [project]="activeProject"
+    (closed)="closeProjectModal()"
+  />
+}
