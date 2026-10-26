@@ -12,6 +12,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
+import {animate, inView} from 'motion';
 import {ApiSandbox} from './components/api-sandbox/api-sandbox';
 import {ProjectModal} from './components/project-modal/project-modal';
 import {ThreeStudio} from './components/three-studio/three-studio';
@@ -58,7 +59,7 @@ const INITIAL_SKILLS_SEED: SkillGroup[] = [
     title: 'Luồng Dữ liệu Bất đồng bộ & Quản lý Trạng thái Tập trung',
     technologies: ['RxJS', 'NgRx', 'Signals', 'State Management'],
     practicalApplication:
-      'Xử lý các luồng sự kiện phức tạp, tìm kiếm thời gian thực, đồng bộ hóa dữ liệu từ REST API bằng toán tử RxJS và quản lý vòng đời trạng thái một chiều minh bạch thông qua NgRx Store / Signals.',
+      'X xử lý các luồng sự kiện phức tạp, tìm kiếm thời gian thực, đồng bộ hóa dữ liệu từ REST API bằng toán tử RxJS và quản lý vòng đời trạng thái một chiều minh bạch thông qua NgRx Store / Signals.',
     architecturalFocus: 'Observable Streams · Immutable Store · Predictable State Transitions',
   },
   {
@@ -325,6 +326,27 @@ export class App {
   constructor() {
     afterNextRender(() => {
       this.syncInitialBackendData();
+
+      // Smooth scroll reveal animations across sections using motion library
+      const sections = document.querySelectorAll('section');
+      for (const sec of sections) {
+        if (sec.id === 'studio-3d') continue;
+        const el = sec as HTMLElement;
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(40px)';
+
+        inView(
+          el,
+          () => {
+            animate(
+              el,
+              {opacity: [0, 1], transform: ['translateY(40px)', 'translateY(0px)']},
+              {duration: 0.8, ease: [0.16, 1, 0.3, 1]}
+            );
+          },
+          {amount: 0.1}
+        );
+      }
     });
   }
 

@@ -4,7 +4,6 @@ import {
   DestroyRef,
   ElementRef,
   afterNextRender,
-  computed,
   inject,
   output,
   signal,
@@ -15,11 +14,7 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {RectAreaLightUniformsLib} from 'three/addons/lights/RectAreaLightUniformsLib.js';
-import {
-  STUDIO_STATIONS,
-  StudioCameraPreset,
-  StudioFinishTheme,
-} from '../../models/portfolio.types';
+import {StudioCameraPreset} from '../../models/portfolio.types';
 import {
   WorkstationAssembly,
   createWorkstationAssembly,
@@ -49,7 +44,6 @@ const CAMERA_PRESETS: Record<StudioCameraPreset, CameraWaypoint> = {
   },
 };
 
-// Module-scope reusable scratch math vectors (Zero GC inside render loop)
 const _desiredPos = new THREE.Vector3();
 const _desiredTarget = new THREE.Vector3();
 const _pointerNdc = new THREE.Vector2();
@@ -58,9 +52,6 @@ const _pointerNdc = new THREE.Vector2();
   selector: 'app-three-studio',
   imports: [MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '(document:keydown)': 'onGlobalKeydown($event)',
-  },
   template: `
     <section
       id="studio-3d"
@@ -121,99 +112,6 @@ const _pointerNdc = new THREE.Vector2();
           </div>
         </div>
       </div>
-
-      <!-- Unified Collapsible Bottom Control Dock (Zero Side-Panel Clutter, Solid RGBA Surface) -->
-      <div
-        class="pointer-events-auto absolute bottom-5 left-1/2 z-20 w-[min(920px,94vw)] -translate-x-1/2 transition-transform duration-200 ease-out"
-        [style.transform]="dockCollapsed() ? 'translate(-50%, calc(100% - 34px))' : 'translate(-50%, 0)'"
-      >
-        <!-- Collapse / Zen Mode Drawer Handle -->
-        <div class="flex justify-center">
-          <button
-            type="button"
-            (click)="toggleDock()"
-            class="inline-flex items-center gap-1.5 rounded-t-lg border border-b-0 border-[#2E3239] bg-[#16181C] px-3.5 py-1.5 font-mono text-[11px] font-medium text-[#D4D4D8] transition-colors duration-150 hover:text-white whitespace-nowrap shrink-0 cursor-pointer"
-          >
-            <mat-icon class="!text-sm !w-3.5 !h-3.5">
-              {{ dockCollapsed() ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
-            </mat-icon>
-            <span>{{ dockCollapsed() ? 'Mở bảng điều khiển 3D [H]' : 'Thu gọn điều khiển [H]' }}</span>
-          </button>
-        </div>
-
-        <!-- Solid Dock Body (Strictly no backdrop-filter over WebGL) -->
-        <div class="rounded-2xl border border-[#2E3239] bg-[#16181C]/96 p-4 shadow-md">
-          <!-- Selected Station Readout -->
-          <div class="flex flex-col justify-between gap-2 border-b border-[#262930] pb-3 sm:flex-row sm:items-center">
-            <div class="min-w-0">
-              <div class="flex items-center gap-2 text-xs font-mono text-[#A1A1AA] tabular-nums">
-                <span class="text-[#D9381E] font-semibold">{{ activeStation().code }}.</span>
-                <span class="font-semibold text-white truncate">{{ activeStation().title }}</span>
-                <span aria-hidden="true" class="hidden md:inline">·</span>
-                <span class="hidden md:inline truncate">{{ activeStation().subtitle }}</span>
-              </div>
-              <p class="mt-1 text-xs text-[#A1A1AA] truncate">
-                {{ activeStation().detail }}
-              </p>
-            </div>
-          </div>
-
-          <!-- Controls Row: Camera Presets | Explode Slider | Material Finishes -->
-          <div class="mt-3 flex flex-wrap items-center justify-between gap-4">
-            <!-- Camera View Presets -->
-            <div class="flex items-center gap-1 rounded-lg bg-[#101114] p-1 border border-[#25282E]">
-              @for (preset of presetButtons; track preset.id) {
-                <button
-                  type="button"
-                  (click)="selectPreset(preset.id)"
-                  [class.bg-[#F6F5F1]]="activePreset() === preset.id"
-                  [class.text-[#141517]]="activePreset() === preset.id"
-                  [class.text-[#D4D4D8]]="activePreset() !== preset.id"
-                  class="rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors duration-150 hover:text-white whitespace-nowrap shrink-0 cursor-pointer"
-                  [class.hover:text-[#141517]]="activePreset() === preset.id"
-                >
-                  {{ preset.label }}
-                </button>
-              }
-            </div>
-
-            <!-- Exploded Architecture Slider -->
-            <div class="flex items-center gap-3">
-              <label
-                for="studio-explode-slider"
-                class="font-mono text-xs text-[#D4D4D8] whitespace-nowrap shrink-0 tabular-nums"
-              >
-                Tách lớp: {{ explodePercent() }}%
-              </label>
-              <input
-                id="studio-explode-slider"
-                type="range"
-                min="0"
-                max="100"
-                [value]="explodePercent()"
-                (input)="onExplodeInput($event)"
-                class="studio-slider w-28 sm:w-36"
-              />
-            </div>
-
-            <!-- Material Finish Theme Selector -->
-            <div class="flex items-center gap-1 rounded-lg bg-[#101114] p-1 border border-[#25282E]">
-              @for (finish of finishButtons; track finish.id) {
-                <button
-                  type="button"
-                  (click)="selectFinish(finish.id)"
-                  [class.bg-[#D9381E]]="activeFinish() === finish.id"
-                  [class.text-white]="activeFinish() === finish.id"
-                  [class.text-[#A1A1AA]]="activeFinish() !== finish.id"
-                  class="rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors duration-150 hover:text-white whitespace-nowrap shrink-0 cursor-pointer"
-                >
-                  {{ finish.label }}
-                </button>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
   `,
 })
@@ -224,31 +122,9 @@ export class ThreeStudio {
   readonly scrollToProfile = output<void>();
   readonly scrollToProjects = output<void>();
 
-  readonly activePreset = signal<StudioCameraPreset>('overview');
-  readonly activeFinish = signal<StudioFinishTheme>('architect');
-  readonly explodePercent = signal<number>(18);
-  readonly dockCollapsed = signal<boolean>(false);
   readonly webglUnavailable = signal<boolean>(false);
 
-  readonly activeStation = computed(() => STUDIO_STATIONS[this.activePreset()]);
-
-  readonly presetButtons: {id: StudioCameraPreset; label: string}[] = [
-    {id: 'overview', label: 'Toàn cảnh'},
-    {id: 'frontend', label: 'Front-end UI'},
-    {id: 'state', label: 'RxJS · NgRx'},
-    {id: 'backend', label: 'Express API'},
-  ];
-
-  readonly finishButtons: {id: StudioFinishTheme; label: string}[] = [
-    {id: 'architect', label: 'Titanium'},
-    {id: 'carbon', label: 'Carbon'},
-    {id: 'brass', label: 'Đồng'},
-  ];
-
-  private requestRenderFn: (() => void) | null = null;
   private startCameraTransitionFn: ((preset: StudioCameraPreset) => void) | null = null;
-  private setTargetExplodeFn: ((ratio: number) => void) | null = null;
-  private setFinishThemeFn: ((theme: StudioFinishTheme) => void) | null = null;
 
   constructor() {
     afterNextRender(() => {
@@ -256,47 +132,13 @@ export class ThreeStudio {
     });
   }
 
-  onGlobalKeydown(event: KeyboardEvent): void {
-    const target = event.target as HTMLElement | null;
-    if (
-      target &&
-      (target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.tagName === 'SELECT' ||
-        target.isContentEditable)
-    ) {
-      return;
-    }
-    if (event.key === 'h' || event.key === 'H') {
-      this.toggleDock();
-    }
-  }
-
-  toggleDock(): void {
-    this.dockCollapsed.update((v) => !v);
-  }
-
   selectPreset(preset: StudioCameraPreset): void {
-    this.activePreset.set(preset);
     this.startCameraTransitionFn?.(preset);
-  }
-
-  onExplodeInput(event: Event): void {
-    const inputEl = event.target as HTMLInputElement;
-    const val = Number(inputEl.value);
-    this.explodePercent.set(val);
-    this.setTargetExplodeFn?.(val / 100);
-  }
-
-  selectFinish(theme: StudioFinishTheme): void {
-    this.activeFinish.set(theme);
-    this.setFinishThemeFn?.(theme);
   }
 
   private initStudioScene(): void {
     const container = this.canvasMount().nativeElement;
 
-    // Detect Software WebGL strictly from GPU renderer string (never user agent)
     const isSoftwareGl = (() => {
       const probeCanvas = document.createElement('canvas');
       const gl = probeCanvas.getContext('webgl2');
@@ -335,24 +177,20 @@ export class ThreeStudio {
     const canvas = renderer.domElement;
     container.appendChild(canvas);
 
-    // Scene & Horizon-matched Atmosphere
     const bgHex = 0x111214;
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(bgHex);
     scene.fog = new THREE.FogExp2(bgHex, 0.045);
 
-    // Studio Environment Map via RoomEnvironment + PMREMGenerator on every device
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const envTarget = pmremGenerator.fromScene(new RoomEnvironment(), 0.04);
     scene.environment = envTarget.texture;
     pmremGenerator.dispose();
 
-    // Camera
     const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 80);
     const initialPreset = CAMERA_PRESETS.overview;
     camera.position.set(...initialPreset.position);
 
-    // Balanced 3-Point Studio Lighting Rig + Softbox
     const hemiLight = new THREE.HemisphereLight(0xdbeafe, 0x23252a, 0.72);
     hemiLight.position.set(0, 12, 0);
     scene.add(hemiLight);
@@ -385,18 +223,14 @@ export class ThreeStudio {
       scene.add(softbox);
     }
 
-    // Build Procedural 10-Part Developer Workstation Assembly
     const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
     const workstation: WorkstationAssembly =
       createWorkstationAssembly(maxAnisotropy);
     scene.add(workstation.floor);
     scene.add(workstation.root);
 
-    let currentExplode = this.explodePercent() / 100;
-    let targetExplode = currentExplode;
-    workstation.applyExplode(currentExplode);
+    workstation.applyExplode(0.18);
 
-    // OrbitControls with damping
     const controls = new OrbitControls(camera, canvas);
     controls.target.set(...initialPreset.target);
     controls.enableDamping = !isSoftwareGl;
@@ -412,7 +246,6 @@ export class ThreeStudio {
       renderer.compile(scene, camera);
     }
 
-    // Camera glide & kinematic state
     let cameraAnimating = false;
     _desiredPos.set(...initialPreset.position);
     _desiredTarget.set(...initialPreset.target);
@@ -455,7 +288,6 @@ export class ThreeStudio {
 
         let stillMoving = false;
 
-        // Exponential damping for camera preset transition
         if (cameraAnimating) {
           if (isSoftwareGl) {
             camera.position.copy(_desiredPos);
@@ -476,22 +308,6 @@ export class ThreeStudio {
               stillMoving = true;
             }
           }
-        }
-
-        // Exponential damping for exploded-view separation
-        if (Math.abs(currentExplode - targetExplode) > 0.001) {
-          if (isSoftwareGl) {
-            currentExplode = targetExplode;
-          } else {
-            currentExplode = THREE.MathUtils.damp(
-              currentExplode,
-              targetExplode,
-              8.0,
-              dt,
-            );
-            stillMoving = true;
-          }
-          workstation.applyExplode(currentExplode);
         }
 
         const controlsChanged = controls.update();
@@ -516,7 +332,6 @@ export class ThreeStudio {
       });
     };
 
-    this.requestRenderFn = requestRender;
     this.startCameraTransitionFn = (preset: StudioCameraPreset) => {
       const wp = CAMERA_PRESETS[preset];
       _desiredPos.set(...wp.position);
@@ -525,17 +340,7 @@ export class ThreeStudio {
       lastFrameTime = performance.now();
       requestRender();
     };
-    this.setTargetExplodeFn = (ratio: number) => {
-      targetExplode = ratio;
-      lastFrameTime = performance.now();
-      requestRender();
-    };
-    this.setFinishThemeFn = (theme: StudioFinishTheme) => {
-      workstation.applyFinishTheme(theme);
-      requestRender();
-    };
 
-    // Cancel scripted camera transition immediately when user interacts manually
     const onControlStart = (): void => {
       cameraAnimating = false;
     };
@@ -545,7 +350,6 @@ export class ThreeStudio {
     controls.addEventListener('start', onControlStart);
     controls.addEventListener('change', onControlChange);
 
-    // High-Performance Raycasting on Dedicated Layer 1
     const raycaster = new THREE.Raycaster();
     raycaster.layers.set(1);
 
@@ -561,7 +365,7 @@ export class ThreeStudio {
     const onPointerUp = (e: PointerEvent): void => {
       const dx = e.clientX - pointerDownX;
       const dy = e.clientY - pointerDownY;
-      if (dx * dx + dy * dy > 36) return; // Ignore orbit drags
+      if (dx * dx + dy * dy > 36) return;
 
       const rect = canvas.getBoundingClientRect();
       _pointerNdc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
@@ -581,7 +385,7 @@ export class ThreeStudio {
 
     const onPointerMove = (e: PointerEvent): void => {
       const now = performance.now();
-      if (now - lastHoverTime < 60) return; // Throttled hover check
+      if (now - lastHoverTime < 60) return;
       lastHoverTime = now;
 
       const rect = canvas.getBoundingClientRect();
@@ -597,7 +401,6 @@ export class ThreeStudio {
     canvas.addEventListener('pointerup', onPointerUp);
     canvas.addEventListener('pointermove', onPointerMove);
 
-    // WebGL Context Safety Listeners
     const onContextLost = (event: Event): void => {
       event.preventDefault();
       this.webglUnavailable.set(true);
@@ -609,7 +412,6 @@ export class ThreeStudio {
     canvas.addEventListener('webglcontextlost', onContextLost);
     canvas.addEventListener('webglcontextrestored', onContextRestored);
 
-    // Responsive Resize Observer
     const onResize = (): void => {
       const w = container.clientWidth || window.innerWidth;
       const h = container.clientHeight || window.innerHeight;
@@ -620,10 +422,8 @@ export class ThreeStudio {
     };
     window.addEventListener('resize', onResize);
 
-    // Trigger initial render frame
     requestRender();
 
-    // Clean disposal on component teardown
     this.destroyRef.onDestroy(() => {
       disposed = true;
       cancelAnimationFrame(frameId);
